@@ -14,16 +14,21 @@ class block:
 		else:
 			return False
 
-
 	def read(self):
-		return self.block_mem
+		return self
 
 	def size(self):
 		return self.block_size
+
+	def __str__(self):
+		temp=""
+		for x in self.block_mem:
+			temp = temp + str(x) + " "
+		return temp
 
 
 if __name__ == "__main__":
 	block_ob = block(100)
 	block_ob.put([1,2,3])
-	print block_ob.block_mem[0]
+	print block_ob
 	print block_ob.block_size
