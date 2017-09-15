@@ -8,7 +8,7 @@ class real_disk:
 
 
   def add_disk(self,d_size,block_size=100):
-    di=disk.disk(d_size,block_size,self.n_disk)
+    di=disk.disk(d_size,self.n_disk,block_size)
     self.n_disk=(self.n_disk+1)%sys.maxint
     self.size+=d_size
     self.total_phy.append(di)
@@ -36,9 +36,14 @@ if __name__ == "__main__":
   rd=real_disk()
   rd.add_disk(200)
   arr=[1,2,3]
-
+  
   x=rd.total_phy[0].writetodisk(10,arr)
   print x
+  y=rd.total_phy[0]
+  print y.d_size
+  print y.id
+
+
   val=rd.total_phy[0].readfromdisk(10)
   print val
   
