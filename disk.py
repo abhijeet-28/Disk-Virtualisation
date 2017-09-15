@@ -29,6 +29,9 @@ class disk:
 
 	def size(self):
 		return self.d_size
+		
+	def get_id(self):
+		return self.id
 
 if __name__ == "__main__":
 	dis=disk(200,0)

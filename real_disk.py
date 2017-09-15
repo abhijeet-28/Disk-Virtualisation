@@ -36,12 +36,15 @@ if __name__ == "__main__":
   rd=real_disk()
   rd.add_disk(200)
   arr=[1,2,3]
-  
+  arr1=[1,3,5]
   x=rd.total_phy[0].writetodisk(10,arr)
   print x
   y=rd.total_phy[0]
   print y.d_size
   print y.id
+  rd.del_disk(0)
+  rd.add_disk(300)
+  x=rd.total_phy[0].writetodisk(10,arr1)
 
 
   val=rd.total_phy[0].readfromdisk(10)
