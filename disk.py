@@ -3,13 +3,12 @@ class disk:
 	id=0
 	d_size=200
 	block_array=[]
-	bitmap=None
   
 	
 
-	def __init__(self,size,block_size=100):
+	def __init__(self,size,id,block_size=100):
 		self.d_size=size
-		self.bitmap=[False]*size
+		self.id=id
 		for i in xrange(size):
 			block_obj=block.block(block_size)
 			self.block_array.append(block_obj)
@@ -17,7 +16,6 @@ class disk:
 	def writetodisk(self,Block_no,info):
 		size=len(info)
 		if self.block_array[Block_no].put(info):
-			self.bitmap[Block_no]=True
 		 	return True
 		else:
 			return False					
@@ -29,8 +27,11 @@ class disk:
 		else:
 			return None
 
+	def size(self):
+		return self.d_size
+
 if __name__ == "__main__":
-	dis=disk(200)
+	dis=disk(200,0)
 	arr=[1,2,3]
 
 	x=dis.writetodisk(10,arr)
