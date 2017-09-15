@@ -8,8 +8,18 @@ class block:
 		self.block_mem = bytearray(self.block_size)
 
 	def put(self,block_info):
-		self.block_mem = bytearray(block_info)
-		self.block_size = len(block_info)
+		if len(block_info)<=self.block_size:
+			self.block_mem = bytearray(block_info)
+			return True
+		else:
+			return False
+
+
+	def read(self):
+		return self.block_mem
+
+	def size(self):
+		return self.block_size
 
 
 if __name__ == "__main__":
