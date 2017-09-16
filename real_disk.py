@@ -5,12 +5,13 @@ class real_disk:
   size=0
   n_disk=0
   bitmap=[]
-
+  free_mem=0
 
   def add_disk(self,d_size,block_size=100):
     di=disk.disk(d_size,self.n_disk,block_size)
     self.n_disk=(self.n_disk+1)%sys.maxint
     self.size+=d_size
+    self.free_mem+=d_size
     self.total_phy.append(di)
     arr=[False]*d_size
     self.bitmap=self.bitmap+arr
@@ -23,13 +24,31 @@ class real_disk:
       if x.get_id()==id:
         self.bitmap[start-x.size():start]=[]
         self.size -= x.size()
+        self.free_mem-=x.size()
         self.total_phy.remove(x)
 
         return True
       else:
         return False
       
-  
+  def write(self,Block_no, info):
+    count=0
+    for i in self.total_phy:
+      count+=i.size()
+      if(Block_no<count):
+        return i.writetodisk(-count+i.size()+Block_no,info)
+    return False
+
+  def read(self,Block_no):
+    count=0
+    for i in self.total_phy:
+      count+=i.size()
+      if(Block_no<count):
+        return i.readfromdisk(-count+i.size()+Block_no)
+    return None
+
+      
+
   
   
 if __name__ == "__main__":

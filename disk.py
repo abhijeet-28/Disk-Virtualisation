@@ -14,7 +14,6 @@ class disk:
 			self.block_array.append(block_obj)
 
 	def writetodisk(self,Block_no,info):
-		
 		if self.block_array[Block_no].put(info):
 		 	return True
 		else:
@@ -29,7 +28,7 @@ class disk:
 
 	def size(self):
 		return self.d_size
-		
+
 	def get_id(self):
 		return self.id
 
