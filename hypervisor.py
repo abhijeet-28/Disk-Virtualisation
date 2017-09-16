@@ -43,25 +43,25 @@ if __name__ == "__main__":
   h=hypervisor()
   h.add_phydisk(300)
   h.add_phydisk(200)
-  vd1=h.create_virtual_disk(150,1)
-  vd2=h.create_virtual_disk(350,2)
+  vd1=h.create_virtual_disk(15,1)
+  vd2=h.create_virtual_disk(35,2)
   arr=[1,2,4]
-  x=h.write(1,100,arr)
+  x=h.write(1,10,arr)
   print x
-  y=h.read(1,100)
+  y=h.read(1,10)
   print vd1.size()
   print vd2.size()
   h.delete_virtual_disk(2)
-  vd3=h.create_virtual_disk(50,3)
-  vd4=h.create_virtual_disk(50,2)
-  vd5=h.create_virtual_disk(50,5)
+  vd3=h.create_virtual_disk(5,3)
+  vd4=h.create_virtual_disk(5,2)
+  vd5=h.create_virtual_disk(5,5)
 
   print vd1.block_map
   h.delete_virtual_disk(3)
-  vd6=h.create_virtual_disk(100,6)
+  vd6=h.create_virtual_disk(10,6)
   print vd6.block_map
 
-  z= h.read(1,100)
+  z= h.read(1,10)
   print y
   
 
