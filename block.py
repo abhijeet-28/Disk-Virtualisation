@@ -9,7 +9,13 @@ class block:
 
 	def put(self,block_info):
 		if len(block_info)<=self.block_size:
-			self.block_mem = bytearray(block_info)
+
+			for x in xrange(len(block_info)):
+				self.block_mem[x] = block_info[x]
+
+			for x in xrange(len(block_info),self.block_size):
+				self.block_mem[x] = 0
+
 			return True
 		else:
 			return False
