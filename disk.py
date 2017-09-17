@@ -7,6 +7,8 @@ class disk:
 	
 
 	def __init__(self,size,id,block_size=100):
+		self.block_array=[]
+
 		self.d_size=size
 		self.id=id
 		for i in xrange(size):

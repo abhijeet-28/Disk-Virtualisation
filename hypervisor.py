@@ -23,8 +23,11 @@ class hypervisor:
 	def checkpoint(self,id,no):
 		if self.get_check_points(id,no)==None:
 			original = self.get_virtual_disk(id)
+			if original==None:
+				print 'disk with id: ',id,' not found'
+				return
 			vd=virtual_disk.virtual_disk(self.rd,original.size(),id)
-			if vd.size()==0:
+			if vd==None:
 				return None
 			else:
 				vd.copy_virtual_disk(self.rd,original)
@@ -99,24 +102,24 @@ if __name__ == "__main__":
   h.add_phydisk(200)
   vd1=h.create_virtual_disk(200,1)
   arr=[1,2,3]
-  x=h.write(1,1,arr)
+  x=h.write(1,100,arr)
   print x
-  y=h.read(1,1)
-  print y
+  y=h.read(1,100)
+  print 'y: ',y
   h.checkpoint(1,1)
 
-  arr=[1,2,4]
-  x=h.write(1,1,arr)
+  arr1=[1,2,4]
+  x=h.write(1,100,arr1)
   print x
-  y=h.read(1,1)
-  print y
+  y=h.read(1,100)
+  print 'y',y
 
   #h.delete_virtual_disk(1)
 
   h.rollback(1,1)
 
   y=h.read(1,100)
-  print y
+  print 'y',y
   
 
 

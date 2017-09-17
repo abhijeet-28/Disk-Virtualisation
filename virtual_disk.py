@@ -25,9 +25,11 @@ class virtual_disk:
 
 
 	def copy_virtual_disk(self,rd,vd):
-
+        
 		for x in xrange(self.d_size):
-			rd.write(self.block_map[x],list(rd.read(vd.block_map[x]).block_mem))
+			z1=(rd.read(vd.block_map[x]).block_mem)
+			v1=z1[:]
+			rd.write(self.block_map[x],list(v1))
 
 		#print "map",rd.read(self.block_map[100])
 
@@ -58,21 +60,21 @@ class virtual_disk:
 	def get_id(self):
 		return self.id
 
-if __name__ == "__main__":
-  rd=real_disk.real_disk()
-  rd.add_disk(300)
-  rd.add_disk(200)
-  vd1=virtual_disk(rd,350,0)
-  arr=[1,2,3]
-  x=vd1.write(rd,320,arr)
-  print x
-  y=vd1.read(rd,320)
-  print y
-  vd2=virtual_disk(rd,150,1)
-  # vd2.delete_disk(rd)
-  # vd3=virtual_disk(rd,100,1)
-  print vd1.block_map
-  print vd2.block_map
+# if __name__ == "__main__":
+#   rd=real_disk.real_disk()
+#   rd.add_disk(300)
+#   rd.add_disk(200)
+#   vd1=virtual_disk(rd,350,0)
+#   arr=[1,2,3]
+#   x=vd1.write(rd,320,arr)
+#   print x
+#   y=vd1.read(rd,320)
+#   print y
+#   vd2=virtual_disk(rd,150,1)
+#   # vd2.delete_disk(rd)
+#   # vd3=virtual_disk(rd,100,1)
+#   print vd1.block_map
+#   print vd2.block_map
 
-  print 'size',vd1.size()
-  print 'size',vd2.size()
+#   print 'size',vd1.size()
+#   print 'size',vd2.size()
