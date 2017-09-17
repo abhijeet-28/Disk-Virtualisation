@@ -22,11 +22,29 @@ class virtual_disk:
 
 			else:
 				break
+	def extend_virtual_disk(self,rd,size,id,block_size=100):
+		if rd.free_mem<size:
+			print('Not enough space,Cant create disk')
+			return None
+		self.d_size+=size
+		self.id=id
+		cur_size=0
+		for i in xrange(rd.size) :
+			if cur_size<size:
+				if not rd.bitmap[i]:
+					self.block_map.append(i)
+					rd.bitmap[i]=True
+					rd.free_mem-=1
+					cur_size=cur_size+1
+
+			else:
+				break
+		return self
 
 
 	def copy_virtual_disk(self,rd,vd):
         
-		for x in xrange(self.d_size):
+		for x in xrange(vd.size()):
 			z1=(rd.read(vd.block_map[x]).block_mem)
 			v1=z1[:]
 			rd.write(self.block_map[x],list(v1))

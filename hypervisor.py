@@ -19,6 +19,18 @@ class hypervisor:
 				return vd
 		print 'Virtual disk with same id already exists'
 		return None
+	def extend_virtual_disk(self,size,id):
+		vd=self.get_virtual_disk(id)
+		if vd==None:
+			print "virtual_disk doesn't exist"
+		else:
+			if self.rd.free_mem<size:
+				print "Not enough space to extend disk"
+				return vd
+			self.v_disks.remove(vd)
+			vd=vd.extend_virtual_disk(self.rd,size,id)
+			self.v_disks.append(vd)
+			return vd
 
 	def checkpoint(self,id,no):
 		if self.get_check_points(id,no)==None:
@@ -28,6 +40,7 @@ class hypervisor:
 				return
 			vd=virtual_disk.virtual_disk(self.rd,original.size(),id)
 			if vd==None:
+				print 'Not enough space to create a checkpoint,delete the previous checkpoints'
 				return None
 			else:
 				vd.copy_virtual_disk(self.rd,original)
@@ -41,8 +54,9 @@ class hypervisor:
 		current = self.get_virtual_disk(id)
 
 		if current==None:
-			print "checkpoint not found"
-
+			print "disk with id ",id," not found"
+			print "creating it from checkpoints"
+			current=self.create_virtual_disk(original.size(),id) 
 		original = self.get_check_points(id,no)
 
 		if not original==None:
@@ -65,7 +79,7 @@ class hypervisor:
 			if i.get_id()==id:
 				i.delete_disk(self.rd)
 				self.v_disks.remove(i)
-				self.delete_checkpoint(id)
+				# self.delete_checkpoint(id)
 				return
 
 	def	write(self,id,Block_no,info):
@@ -97,29 +111,36 @@ class hypervisor:
 
 
 if __name__ == "__main__":
-  h=hypervisor()
-  h.add_phydisk(300)
-  h.add_phydisk(200)
-  vd1=h.create_virtual_disk(200,1)
-  arr=[1,2,3]
-  x=h.write(1,100,arr)
-  print x
-  y=h.read(1,100)
-  print 'y: ',y
-  h.checkpoint(1,1)
+	h=hypervisor()
+	h.add_phydisk(300)
+	h.add_phydisk(200)
+	vd1=h.create_virtual_disk(200,1)
+	vd1=h.extend_virtual_disk(50,1)
+	print vd1.size()
+	arr=[1,2,3]
+	for i in xrange(250):
+		x=h.write(1,i,arr)
+	# print x
+	for j in xrange(250):
+		y=h.read(1,j)
+		# print 'y',y
+	h.checkpoint(1,1)
 
-  arr1=[1,2,4]
-  x=h.write(1,100,arr1)
-  print x
-  y=h.read(1,100)
-  print 'y',y
+	arr1=[1,2,4]
+	for i in xrange(250):
+		x=h.write(1,i,arr1)
+	# print x
+	for j in xrange(250):
+		y=h.read(1,j)
+		# print 'y',y
 
-  #h.delete_virtual_disk(1)
 
-  h.rollback(1,1)
+	#h.delete_virtual_disk(1)
 
-  y=h.read(1,100)
-  print 'y',y
-  
+	h.rollback(1,1)
+	for j in xrange(101):
+		y=h.read(1,j)
+		# print 'y',y
+
 
 
