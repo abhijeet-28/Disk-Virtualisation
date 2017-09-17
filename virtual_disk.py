@@ -3,6 +3,8 @@ class virtual_disk:
 	id=0
 	d_size=0
 	block_map=[]
+	dirty_map=[]
+	dirty_bl=0
 
 	def __init__(self,rd,size,id,block_size=100):
 		if rd.free_mem<size:
@@ -11,11 +13,15 @@ class virtual_disk:
 		self.d_size=size
 		self.id=id
 		cur_size=0
+		self.dirty_bl=0
 		self.block_map=[]
+		self.dirty_map=[]
 		for i in xrange(rd.size) :
 			if cur_size<size:
 				if not rd.bitmap[i]:
 					self.block_map.append(i)
+					self.dirty_map.append(False)
+
 					rd.bitmap[i]=True
 					rd.free_mem-=1
 					cur_size=cur_size+1
@@ -33,6 +39,7 @@ class virtual_disk:
 			if cur_size<size:
 				if not rd.bitmap[i]:
 					self.block_map.append(i)
+					self.dirty_map.append(False)
 					rd.bitmap[i]=True
 					rd.free_mem-=1
 					cur_size=cur_size+1
@@ -43,13 +50,31 @@ class virtual_disk:
 
 
 	def copy_virtual_disk(self,rd,vd):
-        
+		c=0
 		for x in xrange(vd.size()):
-			z1=(rd.read(vd.block_map[x]).block_mem)
-			v1=z1[:]
-			rd.write(self.block_map[x],list(v1))
+			if c>=self.size():
+				break
+			index=vd.block_map[x]
+			if vd.dirty_map[x]:
+				z1=(rd.read(index).block_mem)
+				v1=z1[:]
+				self.write(rd,c,list(v1))
+				c+=1
+		self.dirty_map=vd.dirty_map[:]
+		self.dirty_bl=vd.dirty_bl
 
 		#print "map",rd.read(self.block_map[100])
+	def copy_roll_disk(self,rd,vd):
+		c=0
+		for x in xrange(len(vd.dirty_map)):
+			if vd.dirty_map[x]:
+				index=vd.block_map[c]
+				z1=(rd.read(index).block_mem)
+				v1=z1[:]
+				self.write(rd,x,list(v1))
+				c+=1
+		self.dirty_map=vd.dirty_map[:]
+		self.dirty_bl=vd.dirty_bl
 
 	def delete_disk(self,rd):
 		for i in self.block_map:
@@ -57,11 +82,15 @@ class virtual_disk:
 		rd.free_mem+=self.d_size
 		self.d_size=0
 		self.block_map=[]
+		self.dirty_map=[]
+		self.dirty_bl=0
         
 
 	def write(self,rd,Block_no,info):
 		if Block_no<self.d_size:
 			i = self.block_map[Block_no]
+			self.dirty_map[Block_no]=True
+			self.dirty_bl+=1
 			return rd.write(i,info)	
 		return False
 				

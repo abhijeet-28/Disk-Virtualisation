@@ -1,12 +1,12 @@
 import disk
 import sys
 class real_disk:
+
   total_phy=[]
   size=0
   n_disk=0
   bitmap=[]
   free_mem=0
-
   def add_disk(self,d_size,block_size=100):
     di=disk.disk(d_size,self.n_disk,block_size)
     self.n_disk=(self.n_disk+1)
@@ -23,6 +23,7 @@ class real_disk:
       start+=x.size()
       if x.get_id()==id:
         self.bitmap[start-x.size():start]=[]
+        self.dirty_map[start-x.size():start]=[]
         self.size -= x.size()
         self.free_mem-=x.size()
         self.total_phy.remove(x)
